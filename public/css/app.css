@@ -1,0 +1,75 @@
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+html, body, #app {
+    height: 100%;
+}
+
+#app {
+    display: grid;
+    grid-template-rows: 77px 1fr 75px;
+}
+
+nav {
+    background-color: #d71f26;
+}
+
+.navbar-background {
+    background-color: rgb(214, 214, 214);
+}
+
+.indexH li a{
+    color: black;
+    font-size: 1.1em;
+}
+
+h1, h2, h3 {
+    margin: 0;
+    font-family: "Fugaz One";
+}
+
+.h1 {
+    font-family: "Fugaz One";
+}
+
+.titulo {
+    color: #d71f26;
+}
+
+.imagenFondo {
+    width: 100%;
+    aspect-ratio: 2/1;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.mincard h3{
+    text-shadow: 0.1em 0.1em 0.5em black;
+    font-size: 2em;
+    color: whitesmoke;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    background-color: #d71f26;
+}
+
+.card {
+    box-shadow: 5px 5px 1em;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 75px;
+    background-color: #121212;
+    color: #fff;
+}
+
+.footer p {
+    margin: 0;
+}

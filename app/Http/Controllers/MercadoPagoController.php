@@ -159,18 +159,27 @@ class MercadoPagoController extends Controller
         foreach ($cartItems as $cartItem) {
             $bicicleta = $cartItem->getProduct();
             $cantidad = $cartItem->getQuantity();
-            $precioUnitario = $bicicleta->precio;
+            // $precioUnitario = $bicicleta->precio;
             // Log::debug("Precio: ", [$precioUnitario]);
-            $subtotal = $cantidad * $precioUnitario;
+            // $subtotal = $cantidad * $precioUnitario;
+
+            $subtotal = $cantidad *
+            $bicicleta->precio;
 
             // Calcular el monto total de la compra sumando el subtotal de cada bicicleta
             $montoTotal += $subtotal;
 
             // Guardar la relación entre la compra y la bicicleta en "compra_bicicleta"
-            $compra->bicicletas()->attach($bicicleta->id, [
+            // $compra->bicicletas()->attach($bicicleta->id, [
+            //     'cantidad' => $cantidad,
+            //     // 'precio_unitario' => intval($precioUnitario), // Convertir a entero
+            // ]);
+
+            // Guardar la relación entre la compra y la bicicleta en "compra_bicicleta"
+            $compraBicicleta = new CompraBicicleta([
                 'cantidad' => $cantidad,
-                // 'precio_unitario' => intval($precioUnitario), // Convertir a entero
             ]);
+            $compra->bicicletas()->save($bicicleta, ['cantidad' => $cantidad]);
         }
 
         // Asignar el monto total calculado a la compra

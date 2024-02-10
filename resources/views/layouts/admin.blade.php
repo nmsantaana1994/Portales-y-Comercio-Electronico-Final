@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
     <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="{{ url('css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url('css/app.css') }}">
 </head>
@@ -56,7 +57,13 @@ use Illuminate\Support\Facades\Storage;
                 <div class="col-10">
                     <main class="container py-3">
                         @if(Session::has('feedback.message')) 
-                            <div class="alert alert-{{ Session::get('feedback.type', 'success') }}">{!! Session::get('feedback.message') !!}</div>
+
+                            <div class="alert alert-{{ Session::get('feedback.type', 'success') }} alert-dismissible fade show" role="alert">
+                                {!! Session::get('feedback.message') !!}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        
+                            
                         @endif
         
                         @yield('main')

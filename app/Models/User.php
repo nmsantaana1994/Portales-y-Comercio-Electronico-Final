@@ -60,7 +60,7 @@ class User extends BaseUser
     public function bicicletas(): BelongsToMany {
         return $this->belongsToMany(
             Bicicleta::class,
-            "users_has_bicicletas",
+            // "users_has_bicicletas",
             "user_id",
             "bicicletas_id",
             "user_id",

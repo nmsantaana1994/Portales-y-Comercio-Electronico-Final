@@ -12,42 +12,60 @@
     @if($user)
         <h2 class="mb-3">Datos:</h2>
 
-        <p>Hola {{ $user->nombre ? $user->nombre : $user->email }}, aca debajo vas a poder ver y editar los datos que tenemos cargados sobre vos.</p>
+        <p>Hola {{ $user->nombre ? $user->nombre : $user->email }} {{$user->id}}, aca debajo vas a poder ver y editar los datos que tenemos cargados sobre vos.</p>
 
-        <ul>
-            <li>Nombre: {{ $user->nombre }}</li>
-            <li>Email: {{ $user->email }}</li>
-            <li>Telefono: {{ $user->telefono }}</li>
-        </ul>
+        <div class="row">
+            <div class="col-12">
+                <ul class="list-unstyled">
+                    <li class="mb-3"><b>Nombre:</b> {{ $user->nombre }}</li>
+                    <li class="mb-3"><b>Email:</b> {{ $user->email }}</li>
+                    <li class="mb-3"><b>Telefono:</b> {{ $user->telefono }}</li>
+                </ul>
+            </div>
+        </div>
+
+        <form action="POST">
+            <a href="{{ route('user.formUpdate')}}" class="btn btn-sm btn-primary mb-3">Modificar Datos</a>
+        </form>
 
         {{-- Mostrar detalles de las compras --}}
         @if($compras->count() > 0)
             <h3>Detalles de Compras</h3>
-            @foreach($compras as $compra)
-                <p>Compra ID: {{ $compra->id }}</p>
-                <p>Monto Total: {{ $compra->monto_total }}</p>
 
-                <ul>
-                    @foreach($compra->bicicletas as $bicicleta)
-                        <li>
-                            <p>Bicicleta ID: {{ $bicicleta->bicicletas_id }}</p>
-                            <p>Modelo: {{ $bicicleta->modelo }}</p>
-                            <p>Precio Unitario: {{ $bicicleta->precio }}</p>
-                            <p>Cantidad: {{ $bicicleta->pivot->cantidad }}</p>
-                            <img class="mw-100" src="{{ Storage::url('img/'. $bicicleta->foto) }}" alt="{{ $bicicleta->fotoAlt }}">
-                            {{-- Agrega más detalles según tus necesidades --}}
-                        </li>
+            <table class="table table-responsive table-striped-table-bordered">
+                <thead>
+                    <tr>
+                        <th>Compra ID</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Color</th>
+                        <th>Precio Unitario</th>
+                        <th>Cantidad</th>
+                        <th width="20%">Foto</th>
+                        <th>Monto Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($compras as $compra)
+                        <tr>
+                            <td>{{ $compra->id }}</td>
+                            @foreach($compra->bicicletas as $bicicleta)
+                                <td>{{ $bicicleta->marca }}</td>
+                                <td>{{ $bicicleta->modelo }}</td>
+                                <td>{{ $bicicleta->color->nombre }}</td>
+                                <td>${{ $bicicleta->precio }}</td>
+                                <td>{{ $bicicleta->pivot->cantidad }}</td>
+                                <td><img class="w-100" src="{{ Storage::url('img/'. $bicicleta->foto) }}" alt="{{ $bicicleta->fotoAlt }}"></td>
+                            @endforeach
+                            <td>${{ $compra->monto_total }}</td>
+                        </tr>
                     @endforeach
-                </ul>
-            @endforeach
+                </tbody>
+            </table>
         @else
             <p>No has realizado ninguna compra.</p>
         @endif
     @else
         <p>Todavia no cargaste tus datos, hace click en el botón.</p>
     @endif
-
-    <form action="POST">
-        <button type="submit" class="btn btn-primary">Cargar/Modificar Datos</button>
-    </form>
 @endsection

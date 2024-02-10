@@ -13,14 +13,17 @@ class UserController extends Controller
         $user = Auth::user();
         $compras = Compra::where('user_id', $user->user_id)->with('bicicletas')->get();
 
-        Log::debug("Usuario:", [
-            "user" => $user,
-            "compras" => $compras,
-        ]);
-
         return view("user.index", [
             "user" => $user,
             "compras" => $compras,
+        ]);
+    }
+
+    public function formUpdate() {
+        $user = Auth::user();
+
+        return view("user.form-update", [
+            "user" => $user,
         ]);
     }
 }

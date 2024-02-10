@@ -42,6 +42,9 @@ Route::post("carrito/deleteItem", [CarritoController::class, "deleteItem"])
 Route::get("perfil", [UserController::class, "showPerfil"])
     ->name("user.index")
     ->middleware("auth");
+Route::get("editar-perfil", [UserController::class, "formUpdate"])
+    ->name("user.formUpdate")
+    ->middleware("auth");
 
 // Autenticación
 Route::get("iniciar-sesion", [AuthController::class, "formLogin"])

@@ -128,15 +128,11 @@ class MercadoPagoController extends Controller
         ]);
     }
 
-    public function processSuccess(Request $request) {
-        // Log::debug("Usuario ID: ", Auth::user()->user_id);
-        // dd($request);
-        
+    public function processSuccess(Request $request) {       
         // Normalmente acá podriamos guardar los datos de que la compra se realizó correctamente, para
         // habilitar el servicio, marcar como abonado los productos para poder proceder a su envio, etc.
         // A modo de ejemplo, simplemente vamos a imprimir un mensaje de resultado y la data que recibimos
         // de Mercado Pago.
-
 
         // Obtener datos relevantes de la respuesta de Mercado Pago
         $preferenceId = $request->input('preference_id');
@@ -159,21 +155,12 @@ class MercadoPagoController extends Controller
         foreach ($cartItems as $cartItem) {
             $bicicleta = $cartItem->getProduct();
             $cantidad = $cartItem->getQuantity();
-            // $precioUnitario = $bicicleta->precio;
-            // Log::debug("Precio: ", [$precioUnitario]);
-            // $subtotal = $cantidad * $precioUnitario;
 
             $subtotal = $cantidad *
             $bicicleta->precio;
 
             // Calcular el monto total de la compra sumando el subtotal de cada bicicleta
             $montoTotal += $subtotal;
-
-            // Guardar la relación entre la compra y la bicicleta en "compra_bicicleta"
-            // $compra->bicicletas()->attach($bicicleta->id, [
-            //     'cantidad' => $cantidad,
-            //     // 'precio_unitario' => intval($precioUnitario), // Convertir a entero
-            // ]);
 
             // Guardar la relación entre la compra y la bicicleta en "compra_bicicleta"
             $compraBicicleta = new CompraBicicleta([
@@ -191,7 +178,7 @@ class MercadoPagoController extends Controller
 
         return redirect()
             ->route("home")
-            ->with("feedback.message", 'La compra se realizó éxito con.');
+            ->with("feedback.message", 'La compra se realizó con éxito.');
         // echo "Success!";
         // dd($request);
     }

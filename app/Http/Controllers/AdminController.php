@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Bicicleta;
 use App\Models\Colores;
 use App\Models\Marca;
+use App\Models\Compra;
 use App\Models\Noticia;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Repositories\Contracts\BicicletaRepository;
 use App\SearchParams\BicicletaSearchParams;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -23,16 +25,48 @@ class AdminController extends Controller
     
     public function dashboard(Request $request)
     {
-        $searchParams = new BicicletaSearchParams($request->query());
-        $bicicletas = $this->repo
-            ->withRelations(['color', "marcas"])
-            ->where($searchParams)
-            ->paginate(2);
+        // Obtener la bicicleta más vendida
+        $bicicletaMasVendida = Bicicleta::withCount('compras')
+            ->orderByDesc('compras_count')
+            ->first();
+
+        if ($bicicletaMasVendida) {
+            $cantidadTotalVendida = $bicicletaMasVendida->compras->sum('pivot.cantidad');
+            $totalRecaudadoBicicletaMasVendida = $bicicletaMasVendida->precio * $cantidadTotalVendida;
+        } else {
+            $cantidadTotalVendida = 0;
+            $totalRecaudadoBicicletaMasVendida = 0;
+        }
+
+        // Obtener el total recaudado
+        $totalRecaudado = Compra::sum('monto_total');
+
+        // Obtener los detalles de la compra de cada usuario
+        $detallesComprasPorUsuario = DB::table('users')
+            ->join('compras', 'users.user_id', '=', 'compras.user_id')
+            ->join('compra_bicicleta', 'compras.id', '=', 'compra_bicicleta.compra_id')
+            ->join('bicicletas', 'compra_bicicleta.bicicletas_id', '=', 'bicicletas.bicicletas_id')
+            ->select('users.nombre', 'bicicletas.marca', 'bicicletas.modelo', 'compra_bicicleta.cantidad')
+            ->get();
 
         return view("admin.dashboard", [
-            'bicicletas'=>$bicicletas,
-            'searchParams'=>$searchParams,
+            'bicicletaMasVendida' => $bicicletaMasVendida,
+            'cantidadTotalVendida' => $cantidadTotalVendida,
+            'totalRecaudadoBicicletaMasVendida' => $totalRecaudadoBicicletaMasVendida,
+            'totalRecaudado' => $totalRecaudado,
+            'detallesComprasPorUsuario' => $detallesComprasPorUsuario,
         ]);
+
+        // $searchParams = new BicicletaSearchParams($request->query());
+        // $bicicletas = $this->repo
+        //     ->withRelations(['color', "marcas"])
+        //     ->where($searchParams)
+        //     ->paginate(2);
+
+        // return view("admin.dashboard", [
+        //     'bicicletas'=>$bicicletas,
+        //     'searchParams'=>$searchParams,
+        // ]);
     }
 
     // Bicicletas
@@ -80,10 +114,11 @@ class AdminController extends Controller
     //Usuarios
     public function users()
     {
-        $users = User::with('bicicletas')->get();
+        $users = User::with('compras.bicicletas')->get();
 
         return view("admin.users", [
-            "users"=>$users,
+            "users" => $users,
         ]);
     }
+
 }

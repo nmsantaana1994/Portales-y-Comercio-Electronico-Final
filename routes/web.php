@@ -45,6 +45,11 @@ Route::get("perfil", [UserController::class, "showPerfil"])
 Route::get("editar-perfil", [UserController::class, "formUpdate"])
     ->name("user.formUpdate")
     ->middleware("auth");
+Route::post("editar-perfil", [UserController::class, "processUpdate"])
+    ->name("user.processUpdate")
+    ->middleware("auth");
+
+
 
 // Autenticación
 Route::get("iniciar-sesion", [AuthController::class, "formLogin"])

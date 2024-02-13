@@ -18,8 +18,9 @@
             <div class="col-12">
                 <ul class="list-unstyled">
                     <li class="mb-3"><b>Nombre:</b> {{ $user->nombre }}</li>
-                    <li class="mb-3"><b>Email:</b> {{ $user->email }}</li>
+                    <li class="mb-3"><b>Apellido:</b> {{ $user->apellido }}</li>
                     <li class="mb-3"><b>Telefono:</b> {{ $user->telefono }}</li>
+                    <li class="mb-3"><b>Email:</b> {{ $user->email }}</li>
                 </ul>
             </div>
         </div>
@@ -29,6 +30,7 @@
         </form>
 
         {{-- Mostrar detalles de las compras --}}
+
         @if($compras->count() > 0)
             <h3>Detalles de Compras</h3>
 

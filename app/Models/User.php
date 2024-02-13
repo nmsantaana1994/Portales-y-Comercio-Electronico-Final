@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as BaseUser;
 use Illuminate\Notifications\Notifiable;
@@ -57,14 +58,20 @@ class User extends BaseUser
     //     );
     // }
 
-    public function bicicletas(): BelongsToMany {
+    public function compras(): HasMany
+    {
+        return $this->hasMany(Compra::class, 'user_id', 'user_id');
+    }
+
+    public function bicicletas(): BelongsToMany
+    {
         return $this->belongsToMany(
             Bicicleta::class,
-            // "users_has_bicicletas",
-            "user_id",
-            "bicicletas_id",
-            "user_id",
-            "bicicletas_id",
-        );
+            'compra_bicicleta',
+            'user_id',
+            'bicicleta_id',
+            'user_id',
+            'bicicletas_id'
+        )->withPivot('cantidad')->withTimestamps();
     }
 }

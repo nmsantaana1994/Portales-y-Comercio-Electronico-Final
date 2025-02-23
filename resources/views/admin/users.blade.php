@@ -3,7 +3,7 @@
 @section('title', 'Tablero de Usuarios')
 
 @section('main')
-<h2 class="mb-3">Tablero de Usuarios</h2>
+    <h2 class="mb-3">Tablero de Usuarios</h2>
 
     @if ($users->isEmpty())
         <p>No hay usuarios registrados en el sistema</p>
@@ -15,8 +15,7 @@
                     <th>Rol</th>
                     <th width="35%">Compras</th>
                     <th>Creado el</th>
-                    <th>Actualziado el</th>
-                    <th>Acciones</th>
+                    <th>Actualizado el</th>
                 </tr>
             </thead>
 
@@ -26,29 +25,40 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->rol }}</td>
                         <td>
-                            @if ($user->bicicletas->isEmpty())
-                                <p>No ha comprado ningúna bicicleta</p> 
+                            @if ($user->compras->isEmpty())
+                                <p>No ha realizado ninguna compra</p>
                             @else
-                                @foreach ($user->bicicletas as $bicicleta)
-                                <div>
-                                    <p  class="h5">Bicicleta {{ $bicicleta->marca }} {{ $bicicleta->modelo }}</p>
-                                    <ul class="list-unstyled">
-                                        <li><img class="mw-100" src="{{ Storage::url('img/'. $bicicleta->foto) }}" alt="{{ $bicicleta->fotoAlt }}"></li>
-                                        <li><b>Precio: $</b>{{ $bicicleta->precio }}</li>
-                                    </ul>
+                                <div class="accordion" id="accordionPanelsStayOpenExample">
+                                    @foreach ($user->compras as $compra)
+                                        <div class="accordion-item">
+                                            <p class="h2 accordion-header">
+                                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                                Compra ID: {{ $compra->id }}
+                                            </button>
+                                            </p>
+                                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                                                <div class="accordion-body">
+                                                    <ul class="list-unstyled mb-1">
+                                                        @foreach ($compra->bicicletas as $bicicleta)
+                                                            <li>
+                                                                <p class="text-secondary fw-semibold mb-1">Bicicleta {{ $bicicleta->marca }} {{ $bicicleta->modelo }}</p>
+                                                                <ul>
+                                                                    <li><b>Precio:</b> ${{ $bicicleta->precio }}</li>
+                                                                    <li><b>Cantidad:</b> {{ $bicicleta->pivot->cantidad }}</li>
+                                                                </ul>
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                    <p class="fw-bold mb-1">Monto Total: {{ $compra->monto_total }}</p>
+                                                </div>
+                                            </div>
+                                        </div>    
+                                    @endforeach
                                 </div>
-                                @endforeach
                             @endif
                         </td>
                         <td>{{ $user->created_at }}</td>
                         <td>{{ $user->updated_at }}</td>
-                        <td>
-                            <div class="d-flex gap-1">
-                                <a href="{{ route('admin.noticias_view' , ['id' => $user->user_id]) }}" class="btn btn-primary">Ver</a>
-                                <a href="{{ route('noticias.formUpdate' , ['id' => $user->user_id]) }}" class="btn btn-primary">Editar</a>
-                                <a href="{{ route('noticias.confirmDelete' , ['id' => $user->user_id]) }}" class="btn btn-danger">Eliminar</a>
-                            </div>
-                        </td>
                     </tr>
                 @endforeach
             </tbody>

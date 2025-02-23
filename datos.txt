@@ -7,3 +7,10 @@ Apellido: Santa Ana.
 Docente: Santiago Gallino.
 
 Caracter de entrega: 2do parcial.
+
+Users:
+email: sara@za.com
+password: asdasd
+
+email: admin@admin.com
+password: admin
